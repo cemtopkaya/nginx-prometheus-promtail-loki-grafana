@@ -1,0 +1,27 @@
+# HELP exposer_transferred_bytes_total Transferred bytes to metrics services
+# TYPE exposer_transferred_bytes_total counter
+exposer_transferred_bytes_total 402678882.000000
+# HELP exposer_scrapes_total Number of times metrics were scraped
+# TYPE exposer_scrapes_total counter
+exposer_scrapes_total 898415.000000
+# HELP exposer_request_latencies Latencies of serving scrape requests, in microseconds
+# TYPE exposer_request_latencies summary
+exposer_request_latencies_count 898415
+exposer_request_latencies_sum 491376043.000000
+exposer_request_latencies{quantile="0.500000"} 554.000000
+exposer_request_latencies{quantile="0.900000"} 654.000000
+exposer_request_latencies{quantile="0.990000"} 690.000000
+# HELP PolicyAMAssoReq Number of AM Policy Association Create Request
+# TYPE PolicyAMAssoReq counter
+PolicyAMAssoReq{family="PA",scope="CINAR"} 10584.000000
+# HELP PolicyAMAssoSucc Number of Successful AM Policy Association
+# TYPE PolicyAMAssoSucc counter
+PolicyAMAssoSucc{family="PA",scope="CINAR"} 10805.000000
+# HELP PolicySMAssoReq Number of PDU Session Establishment Request
+# TYPE PolicySMAssoReq counter
+PolicySMAssoReq{family="PA",scope="CINAR",snssai="2"} 2.000000
+PolicySMAssoReq{family="PA",scope="CINAR",snssai="1"} 15870.000000
+# HELP PolicySMAssoSucc Number of Successful PDU Session Establishment
+# TYPE PolicySMAssoSucc counter
+PolicySMAssoSucc{family="PA",scope="CINAR",snssai="2"} 2.000000
+PolicySMAssoSucc{family="PA",scope="CINAR",snssai="1"} 11412.000000

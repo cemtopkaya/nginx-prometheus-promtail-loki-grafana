@@ -1,0 +1,39 @@
+# This file provisions datasources when grafana is starting.
+apiVersion: 1
+
+datasources:
+  - name: prometheus-slave
+    type: prometheus
+    access: proxy
+    orgId: 1
+    url: http://prometheus-slave:9090
+    isDefault:
+    version: 1
+    editable: true
+
+  - name: prometheus-master
+    type: prometheus
+    access: proxy
+    orgId: 1
+    url: http://prometheus-master:9100
+    isDefault:
+    version: 1
+    editable: true
+
+  - name: prometheus-ulak
+    type: prometheus
+    access: proxy
+    orgId: 1
+    url: http://172.19.0.85:31355
+    isDefault:
+    version: 1
+    editable: true
+
+  - name: loki-nginx
+    type: loki
+    access: proxy
+    orgId: 1
+    url: http://host.docker.internal:3100
+    isDefault:
+    version: 1
+    editable: true

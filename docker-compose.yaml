@@ -1,0 +1,132 @@
+# docker-compose -f .\docker-compose.yaml build
+# docker-compose -f .\docker-compose.yaml up
+# docker-compose -f "docker-compose.yaml" down
+version: '3'
+
+services:
+
+  nginx:
+    hostname: metrigi-toplanan
+    container_name: ncin
+    build: 
+      context: nginx
+      dockerfile: Dockerfile
+    volumes:
+      - "nginx-log-data:/var/log/nginx/"
+    ports:
+      - 80:80
+    # volumes:
+    #   - "./nginx/logs:/var/log/nginx"
+
+#  docker service create --replicas 1 --name my-prometheus
+#     --mount type=bind,source=C:/tmp/prometheus.yml,destination=/etc/prometheus/prometheus.yml
+#     --publish published=9090,target=9090,protocol=tcp
+#     prom/prometheus
+
+  prometheus-slave:
+    container_name: cprom-slave
+    hostname: host-prom
+    build: 
+      context: prometheus-slave
+      dockerfile: Dockerfile
+    privileged: true
+    ports:
+    - 9090:9090
+    depends_on:
+    - nginx
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--web.console.libraries=/usr/share/prometheus/console_libraries", "--web.console.templates=/usr/share/prometheus/consoles", "--web.enable-lifecycle"]
+    # command: 
+    #   - "--config.file=/etc/prometheus/prometheus.yml"
+    #   - "--storage.tsdb.path=/prometheus"
+    #   - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+    #   - "--web.console.templates=/usr/share/prometheus/consoles"
+    #   - "--web.enable-lifecycle"
+
+
+  # prometheus-master:
+  #   container_name: cprom-master
+  #   hostname: host-prom
+  #   build: 
+  #     context: prometheus-master
+  #     dockerfile: Dockerfile
+  #   privileged: true
+  #   links:
+  #   - prometheus-slave
+  #   depends_on:
+  #   - prometheus-slave
+  #   ports:
+  #   - 9100:9090
+  #   command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--web.console.libraries=/usr/share/prometheus/console_libraries", "--web.console.templates=/usr/share/prometheus/consoles", "--web.enable-lifecycle"]
+
+  # windows komutu:
+  # docker run -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource" grafana/grafana
+  #
+  # Linux komutu:
+  # docker run -d \
+  #     -p 3000:3000 \
+  #     --name=grafana \
+  #     -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource" \
+  #     grafana/grafana
+  grafana:
+    # network_mode: host
+    container_name: cgrafana
+    hostname: host-grafana 
+    image: grafana/grafana
+    privileged: true 
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    # links:
+      # - prometheus-master
+      # - prometheus-slave
+    volumes:
+      - "./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml"
+      - "./grafana/grafana.ini:/etc/grafana/grafana.ini"
+    # depends_on:
+      # - prometheus-master
+      # - prometheus-slave
+    ports:
+    - 3000:3000
+
+
+  loki:
+    # network_mode: host
+    container_name: cloki
+    hostname: host-loki 
+    image: grafana/loki
+    # command: -config.file=/mnt/config/loki-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
+    privileged: true 
+    # links:
+      # - prometheus-master
+      # - prometheus-slave
+    volumes:
+      - "./loki:/mnt/config"
+    # depends_on:
+      # - prometheus-master
+      # - prometheus-slave
+    ports:
+    - 3100:3100
+
+
+  promtail:
+    container_name: cpromtail
+    image: grafana/promtail:2.4.0
+    volumes:
+      - "./promtail/promtail-config.yaml:/etc/promtail/config.yml"
+      - "nginx-log-data:/var/log/nginx"
+    command: -config.file=/etc/promtail/config.yml
+    ports:
+    - 9080:9080
+    # volumes_from:
+    #   - "nginx:rw"
+    # networks:
+    #   - loki
+
+# networks:
+#   ortak-ag:
+#     name: prom-grafana-loki-nginx
+
+
+
+volumes:
+  nginx-log-data:
