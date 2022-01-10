@@ -18,6 +18,8 @@ Nginx ayar dosyasında başarılı işlemleri ayrı dosyalara günlüklüyoruz �
 ```
 
 ## PROMTAIL
+![image](https://user-images.githubusercontent.com/261946/148707175-568955e7-b995-4b40-81a9-bb93e002330c.png)
+
 Promtail'in amacı log okumak ve lokiye bu günlük kayıtlarını itmek.
 Çalıştığını  [http://localhost:9080](http://localhost:3100)
 Nginx konteynerinin `/var/log/nginx` dizinini bir `nginx-log-data` isminde volume yaratarak bu dizine bağlıyoruz.
@@ -46,11 +48,15 @@ scrape_configs:
 ``` 
 
 ## LOKI
+![image](https://user-images.githubusercontent.com/261946/148707231-728e923c-1559-4a29-9077-bba75b13f430.png)
+
 Görevi gelen log bilgilerini kendi üstünde saklamak ve Grafana sorduğunda ona sunmak.
 Loki varsayılan ayarları ile veya bu projedeki `loki-config.yaml` dosyasıyla başlatılabilir.
 Loki çalıştığı zaman, 3100 portunda metriklerini gösterecektir [http://localhost:3100](http://localhost:3100).
 
 ## PROMETHEUS
+![image](https://user-images.githubusercontent.com/261946/148707225-456079fe-5938-4379-b15c-f0f94351b994.png)
+
 Prometheus varsayılan olarak `/metrics` adresine gider ve eğer farklı adrese gitmesi istenirse `metric_path` alanı job içinde tanımlanmalıdır:
 
 ```yaml
@@ -82,6 +88,8 @@ Durdurmak için:
 docker-compose -f .\docker-compose.yaml down
 ```
 ## GRAFANA
+![image](https://user-images.githubusercontent.com/261946/148707250-99b5db6d-c17d-439e-82d7-7f6406360ee6.png)
+
 Sadece Grafayı ayaklandırmak için:
 ```shell
  docker run -d \
