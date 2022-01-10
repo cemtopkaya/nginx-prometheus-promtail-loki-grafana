@@ -2,7 +2,9 @@
 
 - [prometheus.yaml Ayar dosyasında olabilecek job tanımlarına dair örnekler](https://github.com/prometheus/prometheus/blob/0a8d28ea932ed18e000c2f091200a46d2b62bac4/config/testdata/conf.good.yml)
 
-
+```bash
+docker volume create nginx-log-data
+```
 
 ## nginx Exporter
 Prometheus sunucusu ve metrik üreten bir nginx sunucusu ayakalnıyor.
