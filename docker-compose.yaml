@@ -4,13 +4,17 @@ services:
   prometheus-master:
     container_name: cprometheus
     hostname: host-prometheus
-    restart: always
     image: prom/prometheus
     privileged: true
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Istanbul
     volumes:
-    - ./volume/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./volume/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
     ports:
-    - 9090:9090
+      - 9090:9090
     command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--web.console.libraries=/usr/share/prometheus/console_libraries", "--web.console.templates=/usr/share/prometheus/consoles", "--web.enable-lifecycle", "--web.enable-remote-write-receiver"]
 
 
@@ -20,11 +24,14 @@ services:
     container_name: cgrafana
     hostname: host-grafana
     image: grafana/grafana
-    restart: always
     privileged: true
+    restart: unless-stopped
     environment:
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - TZ=Europe/Istanbul
     volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
       - "./volume/grafana/etc/grafana/provisioning/datasources/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml"
       - "./volume/grafana/etc/grafana/grafana.ini:/etc/grafana/grafana.ini"
 #      - "./volume/grafana/var/lib/grafana:/var/lib/grafana/"
@@ -39,7 +46,12 @@ services:
     image: grafana/loki
     command: -config.file=/etc/loki/local-config.yaml
     privileged: true
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Istanbul
     volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
       - "./volume/loki/mnt/config:/mnt/config"
       - "./volume/loki/loki:/loki"
     ports:
@@ -50,8 +62,12 @@ services:
   promtail:
     container_name: cpromtail
     image: grafana/promtail:2.4.0
-    restart: always
-#    volumes:
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Istanbul
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
 #      - "./volume/promtail/promtail-config.yaml:/etc/promtail/config.yml"
     command: -config.file=/etc/promtail/config.yml
     ports:
