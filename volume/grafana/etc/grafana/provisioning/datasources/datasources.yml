@@ -1,0 +1,20 @@
+# This file provisions datasources when grafana is starting.
+apiVersion: 1
+
+datasources:
+  - name: prometheus
+    type: prometheus
+    access: proxy
+    orgId: 1
+    url: http://cprometheus:9090
+    isDefault: 1
+    version: 1
+    editable: true
+
+  - name: loki
+    type: loki
+    access: proxy
+    orgId: 1
+    url: http://cloki:3100
+    version: 1
+    editable: true

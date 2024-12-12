@@ -34,7 +34,14 @@ rule_files:
 
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it"s Prometheus itself.
+
+
 scrape_configs:
+- job_name: 'cadvisor-redmine'
+  scrape_interval: 5s
+  static_configs:
+    - targets: ['192.168.57.85:8080']
+
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
 - job_name: "local"
   scrape_interval: 5s

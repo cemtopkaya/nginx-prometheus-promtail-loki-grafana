@@ -3,6 +3,14 @@ auth_enabled: false
 server:
   http_listen_port: 3100
 
+compactor:
+  working_directory: /data/retention
+  compaction_interval: 10m
+  retention_enabled: true
+  retention_delete_delay: 2h
+  retention_delete_worker_count: 150
+  delete_request_store: gcs
+
 schema_config:
   configs:
   - from: 2020-05-15
@@ -11,7 +19,7 @@ schema_config:
     schema: v11
     index:
       prefix: index_
-      period: 168h
+      period: 24h
 
 storage_config:
   boltdb:
@@ -24,3 +32,4 @@ limits_config:
   enforce_metric_name: false
   reject_old_samples: true
   reject_old_samples_max_age: 168h
+  retention_period: 336h
